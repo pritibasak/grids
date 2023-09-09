@@ -2,7 +2,7 @@ import { CELL_SIZE, DEFAULT_HEIGHT, DEFAULT_WIDTH } from "../game";
 
 export default class Square extends Phaser.GameObjects.Rectangle{
     
-    tickDelay: number = 100;
+    tickDelay: number = 250;
     moveTime: number = 0;
 
     constructor(scene, x, y){
@@ -40,6 +40,8 @@ export default class Square extends Phaser.GameObjects.Rectangle{
     public nextPos(direction: {x: number, y: number}){
         let x = this.x + direction.x * CELL_SIZE;
         let y = this.y + direction.y * CELL_SIZE; 
+
+        // console.log('x----->',x,y)
 
         if(x > DEFAULT_WIDTH){
             x = 0
