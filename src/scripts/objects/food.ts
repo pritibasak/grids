@@ -18,6 +18,11 @@ export default class Food extends Phaser.GameObjects.Rectangle{
         this.height = CELL_SIZE;
         this.setFillStyle(0xff00ff, 1)
     }  
+    randomFoodPosition(){
+        const x = Phaser.Math.RND.between(0, DEFAULT_WIDTH / CELL_SIZE - 1) * CELL_SIZE;
+        const y = Phaser.Math.RND.between(0, DEFAULT_HEIGHT / CELL_SIZE - 1) * CELL_SIZE;
+        this.setPosition(x, y);
+    }
     moveFood(time, direction: {x: number, y: number}){
 
         console.log('food moving',direction.x,direction.y)

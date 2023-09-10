@@ -1,5 +1,7 @@
 import { CELL_SIZE, DEFAULT_HEIGHT, DEFAULT_WIDTH } from "../game";
 
+// let body = [];
+let body;
 export default class Square extends Phaser.GameObjects.Rectangle{
     
     tickDelay: number = 250;
@@ -8,132 +10,63 @@ export default class Square extends Phaser.GameObjects.Rectangle{
     constructor(scene, x, y){
         super(scene, x, y)
         scene.add.existing(this)
-        this.setOrigin(0,0)
+        this.setOrigin(0,0) 
         this.width = CELL_SIZE;
         this.height = CELL_SIZE;
         this.setFillStyle(0x0000ff, 1)
     }
-
-    public move(time, direction: {x: number, y: number},headDirection: {x: number, y: number}){
-        this.x += direction.x * CELL_SIZE
-        this.y += direction.y * CELL_SIZE
-        console.log('dir :---- ',direction.x,direction.y)
-
-        if(direction.x == 0 && direction.y == 0)
-        { 
-
-        }
-        else{
-            console.log('non zero')
-
-            // if()s
-        }
-
-
-        // if(direction.x == 0 && direction.y == -1 ||
-        //   direction.x == 0 && direction.y == 1) {
-        //   headDirection.x = -1;
-        //   headDirection.y = 0; 
-
-        //   this.x += headDirection.x * CELL_SIZE
-        //   this.y += headDirection.y * CELL_SIZE
+    setBodyArray(bodyArray){
+        body = bodyArray;
+        console.log('body;;;;;',this);
+        
+        body[0] = this;
+    }
+    public move(time, direction: {x: number, y: number},headDirection: {x: number, y: number},_leftright,_upDown,_bool){
+        // console.log('dir :---- ',_leftright,_upDown)
+        // console.log('_bool :---- ',_bool)
+          
+        // if(body.length > 1){
+            for (let i = body.length - 1; i > 0; i--) { 
+            body[i].x = body[i - 1].x ;
+            body[i].y = body[i - 1].y ;
+            }
         // }
-        // else if(direction.x == 0 && direction.y == -1 ||
-        //   direction.x == 0 && direction.y == 1){
-        //   headDirection.x = 1;
-        //   headDirection.y = 0; 
-
-        //   this.x += headDirection.x * CELL_SIZE
-        //   this.y += headDirection.y * CELL_SIZE
-        // } 
-        // else if(direction.x == -1 && direction.y == 0 ||
-        //   direction.x == 1 && direction.y == 0){
-        //   headDirection.x = 0; 
-        //   headDirection.y = -1; 
-
-        //   this.x += headDirection.x * CELL_SIZE
-        //   this.y += headDirection.y * CELL_SIZE
-        // } 
-        // else if(direction.x == -1 && direction.y == 0 ||
-        //   direction.x == 1 && direction.y == 0){
-        //   headDirection.x = 0;
-        //   headDirection.y = 1; 
-
-        //   this.x += headDirection.x * CELL_SIZE
-        //   this.y += headDirection.y * CELL_SIZE
-        // }
-        // else{
-        //     this.x += direction.x * CELL_SIZE
-        //     this.y += direction.y * CELL_SIZE
-        // }
+       
+  
 
 
 
 
-
-
-
-        if(this.x > DEFAULT_WIDTH){
-            this.x = 0
+        body[0].x += direction.x * CELL_SIZE
+        body[0].y += direction.y * CELL_SIZE 
+       
+        if(body[0].x > DEFAULT_WIDTH){
+            body[0].x = 0
         }
 
-        if(this.y > DEFAULT_HEIGHT){
-            this.y = 0
+        if(body[0].y > DEFAULT_HEIGHT){
+            body[0].y = 0
         }
 
-        if(this.x < 0) {
-            this.x = DEFAULT_WIDTH-CELL_SIZE
+        if(body[0].x < 0) {
+            body[0].x = DEFAULT_WIDTH-CELL_SIZE
         }
 
-        if(this.y < 0){
-            this.y = DEFAULT_HEIGHT-CELL_SIZE
+        if(body[0].y < 0){
+            body[0].y = DEFAULT_HEIGHT-CELL_SIZE
         }
 
         this.moveTime = time + this.tickDelay;
     }
-    // faceLeft(direction: {x: number, y: number}){
-    //     console.log('dir : ', this.direction)
-    //     if(this.direction.x == 0 && this.direction.y == -1 ||
-    //       this.direction.x == 0 && this.direction.y == 1){
-    //       this.headDirection.x = -1;
-    //       this.headDirection.y = 0;
-    //       // return this.headDirection;
-    //     }
-    //   }
-    //   faceRight(direction: {x: number, y: number}){
-    //     if(this.direction.x == 0 && this.direction.y == -1 ||
-    //       this.direction.x == 0 && this.direction.y == 1){
-    //       this.headDirection.x = 1;
-    //       this.headDirection.y = 0;
-    //       // return this.headDirection;
-    //     }
-    //   }
-    //   faceUp(direction: {x: number, y: number}){
-    //     if(this.direction.x == -1 && this.direction.y == 0 ||
-    //       this.direction.x == 1 && this.direction.y == 0){
-    //       this.headDirection.x = 0; 
-    //       this.headDirection.y = -1;
-    //       // return this.headDirection;
-    //     }
-    //   }
-    //   faceDown(direction: {x: number, y: number}){
-    //     if(this.direction.x == -1 && this.direction.y == 0 ||
-    //       this.direction.x == 1 && this.direction.y == 0){
-    //       this.headDirection.x = 0;
-    //       this.headDirection.y = 1;
-    //       this.direction = {x:this.headDirection.x,y:this.headDirection.y}
-    //       // return this.headDirection;
-    //     }
-    //   }
+    grow(){
+        const newPart = this.scene.add.rectangle(-CELL_SIZE, -CELL_SIZE, CELL_SIZE, CELL_SIZE, 0x00ff00).setOrigin(0);
+        body.push(newPart); 
+    }
     public nextPos(direction: {x: number, y: number}){
         let x = this.x + direction.x * CELL_SIZE;
         let y = this.y + direction.y * CELL_SIZE; 
 
-        console.log('x----->',direction.x,direction.y)
-
-
-
-
+        console.log('x----->',direction.x,direction.y) 
         if(x > DEFAULT_WIDTH){
             x = 0
         }
