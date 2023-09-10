@@ -21,7 +21,7 @@ export default class Square extends Phaser.GameObjects.Rectangle{
         
         body[0] = this;
     }
-    public move(time, direction: {x: number, y: number},headDirection: {x: number, y: number},_leftright,_upDown,_bool){
+    public move(time, direction: {x: number, y: number}){
         // console.log('dir :---- ',_leftright,_upDown)
         // console.log('_bool :---- ',_bool)
           
@@ -54,8 +54,7 @@ export default class Square extends Phaser.GameObjects.Rectangle{
 
         if(body[0].y < 0){
             body[0].y = DEFAULT_HEIGHT-CELL_SIZE
-        }
-
+        } 
         this.moveTime = time + this.tickDelay;
     }
     grow(){
@@ -84,6 +83,15 @@ export default class Square extends Phaser.GameObjects.Rectangle{
         }
 
         return {x, y}
+
+    }  
+    CollisionByItself(_isIntersected){ 
+        for(let i = 0; i < body.length; i++) {
+            if(Phaser.Geom.Intersects.RectangleToRectangle(body[0].getBounds(), body[i].getBounds())) {
+                console.log('intersected')
+                _isIntersected = true;
+            }
+        } 
 
     }
 

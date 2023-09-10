@@ -5,6 +5,7 @@ import Grid from '../objects/grid';
 import { CELL_SIZE, DEFAULT_HEIGHT, DEFAULT_WIDTH } from "../game";
 
 let body = [];
+let isIntersected = false;
 let leftRightSideArray = [
   {x:-1, y:0},     // for left or right
   {x:1, y:0}
@@ -13,7 +14,6 @@ let upDownSideArray = [
   {x:0, y:-1},
   {x:0, y:1}        //for up and down
 ];
-let isPressed = false;
 export default class MainScene extends Phaser.Scene {
   fpsText: FpsText;
   square: Square;
@@ -35,42 +35,7 @@ export default class MainScene extends Phaser.Scene {
     this.fpsText = new FpsText(this)
     this.square = new Square(this, 0, 0);
     this.square.setBodyArray(body)
-  }
-
-  // faceLeft(direction: {x: number, y: number}){
-  //   console.log('dir : ', this.direction)
-  //   if(this.direction.x == 0 && this.direction.y == -1 ||
-  //     this.direction.x == 0 && this.direction.y == 1){
-  //     this.headDirection.x = -1;
-  //     this.headDirection.y = 0;
-  //     // return this.headDirection;
-  //   }
-  // }
-  // faceRight(direction: {x: number, y: number}){
-  //   if(this.direction.x == 0 && this.direction.y == -1 ||
-  //     this.direction.x == 0 && this.direction.y == 1){
-  //     this.headDirection.x = 1;
-  //     this.headDirection.y = 0;
-  //     // return this.headDirection;
-  //   }
-  // }
-  // faceUp(direction: {x: number, y: number}){
-  //   if(this.direction.x == -1 && this.direction.y == 0 ||
-  //     this.direction.x == 1 && this.direction.y == 0){
-  //     this.headDirection.x = 0; 
-  //     this.headDirection.y = -1;
-  //     // return this.headDirection;
-  //   }
-  // }
-  // faceDown(direction: {x: number, y: number}){
-  //   if(this.direction.x == -1 && this.direction.y == 0 ||
-  //     this.direction.x == 1 && this.direction.y == 0){
-  //     this.headDirection.x = 0;
-  //     this.headDirection.y = 1;
-  //     this.direction = {x:this.headDirection.x,y:this.headDirection.y}
-  //     // return this.headDirection;
-  //   }
-  // }
+  } 
   update(time, delta) {  
     if(this.food.x / 15 == this.square.x / 15 && this.food.y / 20 == this.square.y / 20){
       console.log('overlaped')
@@ -99,12 +64,13 @@ export default class MainScene extends Phaser.Scene {
     } else{
       // this.direction = {x: 0, y: 0};
     }
-    
-    
- 
+    this.square.CollisionByItself(isIntersected);
+    if(isIntersected){
+      this.scene.restart();
+    }
     
     if(time >= this.square.moveTime && this.direction){
-      this.square.move(time, this.direction, this.headDirection,leftRightSideArray,upDownSideArray,isPressed)
+      this.square.move(time, this.direction)
     }
   }
 }
