@@ -4,16 +4,7 @@ import Food from '../objects/food';
 import Grid from '../objects/grid';
 import { CELL_SIZE, DEFAULT_HEIGHT, DEFAULT_WIDTH } from "../game";
 
-let body = [];
-let isIntersected = false;
-let leftRightSideArray = [
-  {x:-1, y:0},     // for left or right
-  {x:1, y:0}
-];
-let upDownSideArray = [
-  {x:0, y:-1},
-  {x:0, y:1}        //for up and down
-];
+let body = [];  
 export default class MainScene extends Phaser.Scene {
   fpsText: FpsText;
   square: Square;
@@ -33,15 +24,24 @@ export default class MainScene extends Phaser.Scene {
     this.grid = new Grid(this, 0,0)
     this.food = new Food(this,15,20);
     this.fpsText = new FpsText(this)
-    this.square = new Square(this, 0, 0);
+    this.square = new Square(this, 10, 9);
     this.square.setBodyArray(body)
   } 
   update(time, delta) {  
-    if(this.food.x / 15 == this.square.x / 15 && this.food.y / 20 == this.square.y / 20){
-      console.log('overlaped')
+
+    /**
+     * food eat logic by the snake and repositioned the food
+     * and grow the snake
+     */
+    if(this.food.x == this.square.x && this.food.y  == this.square.y  ){ 
       this.food.randomFoodPosition();
       this.square.grow();
     }
+
+  /**
+   * here I block direction if snake is moving up then it can not move to down immediately it has to move left or right 
+   * first to move down same for other directions
+   */
     if(this.cursorKeys.up.isDown){ 
       if(this.direction.y ! = 1){
         this.direction = {x: 0, y: -1};
@@ -63,11 +63,18 @@ export default class MainScene extends Phaser.Scene {
       }
     } else{
       // this.direction = {x: 0, y: 0};
-    }
-    this.square.CollisionByItself(isIntersected);
-    if(isIntersected){
+    } 
+  
+    /**
+     * by the help of the boolean its throwng from square class whenever 
+     * it overlapped with other elements of the array made game over logic
+     * and restarted the scene again
+     */
+    if (this.square.isGameOver()) { 
+      console.log("Game over!"); 
       this.scene.restart();
-    }
+  }
+    
     
     if(time >= this.square.moveTime && this.direction){
       this.square.move(time, this.direction)
