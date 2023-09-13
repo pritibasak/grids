@@ -2,16 +2,16 @@ import { CELL_SIZE, DEFAULT_HEIGHT, DEFAULT_WIDTH } from "../game";
 
 export default class Square extends Phaser.GameObjects.Rectangle{
     
-    tickDelay: number = 100;
+    tickDelay: number = 250;
     moveTime: number = 0;
 
-    constructor(scene, x, y){
+    constructor(scene, x, y,color){
         super(scene, x, y)
         scene.add.existing(this)
         this.setOrigin(0,0)
         this.width = CELL_SIZE;
         this.height = CELL_SIZE;
-        this.setFillStyle(0x0000ff, 1)
+        this.setFillStyle(color, 1)
     }
 
     public move(time, direction: {x: number, y: number}){
